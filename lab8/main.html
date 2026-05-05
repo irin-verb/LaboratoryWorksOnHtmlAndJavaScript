@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab8</title>
+    <style>
+        .matrix-container {
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+    <script src="baseObject.js" charset="windows-1251"></script>
+    <script src="matrix.js" charset="windows-1251"></script>
+    <script src="matrixList.js" charset="windows-1251"></script>
+    <script src="script.js" charset="windows-1251"></script>
+</head>
+<body>
+    <form>
+
+        <h2>Калькулятор матриц</h2>
+        <b> Размерность N = </b>
+        <input type="text" id="n" style="width: 25px;" value="3">
+
+        <hr> <br>
+        <button type="button" onclick="addMatrix(form.n.value)">Добавить матрицу</button>
+
+        <div id="matrixContainers"></div>
+        
+        <hr>
+        <button type="button" onclick="sumMatrix()">Сложение матриц</button>
+        <button type="button" onclick="subMatrix()">Вычитание матриц</button>
+        <button type="button" onclick="mulMatrix()">Умножение матриц</button>
+    
+    </form>
+</body>
+</html>

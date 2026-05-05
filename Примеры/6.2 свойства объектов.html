@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var book = {
+		"main title" : "War and Peace",
+		'sub-title' : "Historical Novel",
+
+		author : {
+			firstName : "Leo",
+			surName : "Tolstoy"
+		}
+	};
+	
+	// создание нового свойства
+	book.edition = 6;
+	
+	// удаление свойств
+	delete book.author;
+	delete book["sub-title"];
+	
+	console.log(book); // {main title: 'War and Peace', edition: 6}
+	console.log(book.author); // undefined: свойства не существует
+	
+	// проверка на существование свойств
+	console.log("main title" in book); // true
+	console.log("sub-title" in book); // false
+	console.log(book.hasOwnProperty("edition")); // true
+	console.log(book.hasOwnProperty("author")); // false
+	console.log(book.edition !== undefined); // true
+	console.log(book.author !== undefined); // false
+	
+	//перечисление свойств
+	for(item in book)
+		console.log(item); // 'main title' edition
+		
+</script>
+</head>
+<body>
+</body>
+</html>
+

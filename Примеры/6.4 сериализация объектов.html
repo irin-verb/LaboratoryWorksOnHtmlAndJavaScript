@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var user = {
+		name: "Вася",
+		age: 25,
+		
+		signup: {
+			login : "Vasya",
+			pass  : "qwerty"
+		},
+		
+		roles: {
+			isAdmin  : false,
+			isEditor : true,
+			isBanned : false,
+		},
+		
+		invitedBy : null,
+		friends   : [],
+	};
+	
+	
+	// сериализуем объект в строку
+	var s = JSON.stringify(user);
+	console.log(s);
+	// {"name":"Вася","age":25,"signup":{"login":"Vasya","pass":"qwerty"},
+	// "roles":{"isAdmin":false,"isEditor":true,"isBanned":false},"invitedBy":null,"friends":[]}
+	
+	// парсим строку и восстанавливаем объект
+	var o = JSON.parse(s);
+	console.log(o);
+	// {name: 'Вася', age: 25, signup: {…}, roles: {…}, invitedBy: null, …}
+	
+	//можно указать массив свойств, подлежащих сериализации
+	s = JSON.stringify(user,["name","age","friends"]);
+	console.log(s);
+	// {"name":"Вася","age":25,"friends":[]}
+	
+	//или можно передать объект функции который возвращает value для сериализации
+	// или undefined если включать свойство не нужно в результат
+	s = JSON.stringify(user, function(key, value){
+		
+		if(key == "friends" && value.length == 0)
+			return "no friends";
+		else
+		if(key == "signup" || value == null)
+			return undefined;
+			
+		return value;
+	});
+	
+	console.log(s);
+	// {"name":"Вася","age":25,"roles":{"isAdmin":false,"isEditor":true,"isBanned":false},"friends":"no friends"}
+	
+	
+	//третий параметр задаёт формат вывода
+	s = JSON.stringify(user, null, 4); // 4 пробела для отступов
+	console.log(s);
+	/*
+	{
+		"name": "Вася",
+		"age": 25,
+		"signup": {
+			"login": "Vasya",
+			"pass": "qwerty"
+		},
+		"roles": {
+			"isAdmin": false,
+			"isEditor": true,
+			"isBanned": false
+		},
+		"invitedBy": null,
+		"friends": []
+	}
+	*/
+	
+	s = JSON.stringify(user, null, "-->"); // указать формат разделителя
+	console.log(s);
+	/*
+	{
+	-->"name": "Вася",
+	-->"age": 25,
+	-->"signup": {
+	-->-->"login": "Vasya",
+	-->-->"pass": "qwerty"
+	-->},
+	-->"roles": {
+	-->-->"isAdmin": false,
+	-->-->"isEditor": true,
+	-->-->"isBanned": false
+	-->},
+	-->"invitedBy": null,
+	-->"friends": []
+	}
+	*/
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

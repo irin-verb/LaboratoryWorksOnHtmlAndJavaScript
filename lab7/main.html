@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<style>
+
+		.message {
+			margin: 15px;
+			padding: 15px;
+			border: 1px solid #d6e9c6;
+			border-radius: 4px;
+			color: #3c763d;
+			background-color: #dff0d8;
+		}
+
+	</style>
+	<script src="script.js" charset="windows-1251"></script>
+
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body onload="init()">
+	<form>
+
+		<hr>
+		<b> Аргументы функции </b> <br>
+		X =
+		<input type="text" id="a" style="width: 25px;" value="0">
+		(
+		<input type="text" id="h" style="width: 25px;" value="1">
+		)
+		<input type="text" id="b" style="width: 25px;" value="10">
+
+		<hr>
+		<b> Вид функции </b> <br>
+		<input type="radio" name="func_types" value="f1" checked> \( f_{1}(x)=x\sqrt{\sin^{3}(x+10)}+\frac{x^{3}-\cos{x}}{x} \) <br>
+		<input type="radio" name="func_types" value="f2"> \( f_{2}(x)=\sin^{2}{x}-\mid\sin{(x-4)}\mid \) <br>
+		<input type="radio" name="func_types" value="f3"> \( f_{3}(x)=e^{x-2}+x^3+2x\frac{\ln{(x+3)}}{7} \)<br>
+
+		<hr>
+		<b> Рассчитываемые характеристики </b> <br>
+		<input type="checkbox" name="calc_chars" value="ch1" checked> Минимум <br>
+		<input type="checkbox" name="calc_chars" value="ch2"> Является ли монотонно-убывающей <br>
+		<input type="checkbox" name="calc_chars" value="ch3"> Кол-во нулевых значений <br>
+
+		<hr>
+		<b> Варианты функции </b> <br>
+		<input type="checkbox" name="func_variants" value="v1" checked> Мемоизированная <br>
+		<input type="checkbox" name="func_variants" value="v2"> Отладочная <br>
+		<input type="checkbox" name="func_variants" value="v3"> Сохранение кол-ва вызовов <br>
+
+		<hr>
+		<input type="button" value="Рассчитать" onclick="calculate()">
+		<hr>
+
+	</form>
+
+</body>
+</html>

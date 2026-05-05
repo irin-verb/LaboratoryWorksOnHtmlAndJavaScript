@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+
+
+<script>
+	
+	var str = "Это строка текста";
+	str += " в JavaScript"; // конкатенация через +
+	
+	// строки сравниваются по-символьно, лексикографически
+	console.log("A" > "Z", "AAZ" < "AZ", "abc" == "abc");
+	
+	console.log(str.toUpperCase()); // => "ЭТО СТРОКА ТЕКСТА В JAVASCRIPT"
+	console.log("ABCD".toLowerCase()); // => "abcd"
+	// JavaScript автоматически преобразует строковый литерал в объект String,
+	// поэтому для строковых литералов можно напрямую вызывать методы String
+	
+	var s1 = str.charAt(2); // => "o"
+	var s2 = str[0]; // => "Э"
+	var s3 = str.charAt(100); // => ""
+	var s4 = str[100]; // => "undefined"
+	console.log(s1,s2,s3,s4);
+	
+	console.log(str.substring(4,10)); // => "строка"
+	console.log(str.substring(4)); // => "строка текста в JavaScript"
+	console.log(str.substring(str.length - 10)); // => "JavaScript"
+
+	console.log(str.slice(4,10)); // => "строка"
+	console.log(str.slice(4,-13)); // => "строка текста"
+	console.log(str.slice(-10)); // => "JavaScript"	
+
+	console.log(str.substr(4,6)); // => "строка"
+	console.log(str.substr(4)); // => "строка текста в JavaScript"
+	console.log(str.substr(-10)); // => "JavaScript"	
+	
+	console.log(str.indexOf("JavaScript")); // => 20	
+	console.log(str.lastIndexOf("о")); // => 7	
+	console.log(str.indexOf("к",10)); // => 13	
+	console.log(str.indexOf("Z")); // => -1
+
+	var myString = "один, два, три, четыре";
+	console.log(myString.split(", ")); // => ['один', 'два', 'три', 'четыре']
+	console.log(myString.split(", ").join(" - ")); // => один - два - три - четыре
+	console.log(myString.split(", ").join("")); // => одиндватричетыре
+	console.log(myString.split(", ").join()); // => один,два,три,четыре
+	console.log(myString.split("")); // => ['о', 'д', 'и', 'н', ',', ' ', 'д', 'в', 'а', ',', ' ', 'т', 'р', 'и', ',', ' ', 'ч', 'е', 'т', 'ы', 'р', 'е']
+
+	console.log(myString.replace("один","1").replace("три","3")); // => 1, два, 3, четыре
+	var regexp = /автомобиль/gi;
+	var myString2 = "АВТОМОБИЛЬ синий, автомобиль красный";
+	console.log(myString2.replace(regexp,"грузовик")); // => грузовик синий, грузовик красный
+	
+</script>
+
+<head>
+<body> 
+</body>
+</html>

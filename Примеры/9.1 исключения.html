@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	try 
+	{
+	  console.log('Начало блока try'); 
+	  someFunc(); // ошибка, функция не определена
+	  console.log('Конец блока try'); 
+
+	} 
+	catch(err)
+	{
+	  console.log('Возникла ошибка!'); 
+	  console.log(err.name); 
+	  console.log(err.message); 
+	  console.log(err.stack); 
+	  // err имеет имя ошибки name, описание message
+	  // и стек вызова stack
+	}
+	finally
+	{
+		console.log('Вызывается всегда!');
+
+		/*
+			Обычно finally используется для завершения
+			каких-либо действий, начатых в try.
+			Просто ниже try..catch этот код написать нельзя, 
+			т.к. например при пробросе исключения этот код
+			выполнен не будет!
+		*/
+	}
+	
+	// ---------------------------------------------
+	
+	// Важно: try...catch могут отловить только ошибки
+	// в синхронном коде. Следующая обработка ошибок не сработает:
+	try {
+	  setTimeout( function() 
+				  {
+					noFunction(); // Uncaught ReferenceError: noFunction is not defined
+				  }, 3000);
+	} catch (e) {
+	  console.log('Не сработает...');
+	}
+	
+	// ---------------------------------------------
+	// Многие стандартные объекты генерируют исключения,
+	// которые можно обработать через try...catch:
+	
+	var json = '{ bad JSON format }';
+	try 
+	{
+		let person = JSON.parse(json); // тут возникает ошибка
+		сonsole.log(person.id); // не сработает
+	} 
+	catch // если err не нужен, его можно не писать
+	{
+		console.log( "Произошла ошибка в загрузке данных! Попробуйте ещё раз.");
+	}
+	
+	// ---------------------------------------------
+	// генерировать собственные исключения можно через throw
+	// в качестве исключения подойдёт любое значение
+	
+	json = '{"login": "qwerty", "password": "pass123"}';
+	try 
+	{
+		let person = JSON.parse(json); // теперь формат данных правильный
+		
+		// но данные неполные, поэтому выбросим исключение
+		if(person.id === undefined)
+		 throw "Данные повреждены!"; 
+	} 
+	catch(err) // err теперь это строка, а не объект ошибки
+	{
+		console.log(err);
+	}
+	
+	// ---------------------------------------------
+	// catch должен обработать только известные ему случаи,
+	// иначе пробросить исключение дальше
+	function process()
+	{
+		try
+		{
+			let obj = {a : -1};
+			
+			if(obj.a < 0 || obj.a > 10)
+				throw "RangeError";
+		}
+		catch(err)
+		{
+			if(err == "NetError")
+				console.log("Произошла ошибка сети!");
+			else
+				throw err; // проброс исключения дальше
+		}
+	}
+	
+	try
+	{
+		process();
+	}
+	catch(err)
+	{
+		if(err == "RangeError")
+			console.log("Выход за границы диапазона!");
+		else
+			throw err; // проброс исключения дальше
+	}
+	
+	
+	// ---------------------------------------------
+	// глобальный обработчик ошибок можно установить в свойство window.onerror
+	window.onerror = function(message, url, line, col, error) 
+	{
+		console.log("К сожалению произошла ошибка, сообщение будет отправлено разработчикам.");
+		console.log("Страница ошибки:", url);
+		console.log("Позиция ошибки:", line, col);
+		console.log("Описание ошибки:", message);
+	};
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

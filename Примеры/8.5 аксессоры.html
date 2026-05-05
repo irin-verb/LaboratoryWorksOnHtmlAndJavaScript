@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var person = {
+		_name: "Иван",
+		_surname: "Иванов",
+
+		get fullName() 
+		{ 
+			return this._name + " " + this._surname;
+		}
+	};
+	
+	console.log(person.fullName); // Иван Иванов
+	person.fullName = "Петр Петров"; // Т.к. сеттера нет, свойство не будет изменено
+	console.log(person.fullName); // Иван Иванов
+	
+	// технически внешний код всё ещё может получить доступ к 
+	// имени напрямую person._name, однако существует соглашение о том, 
+	// что свойства начинающиеся с "_", являются внутренними, и к ним 
+	// не следует обращаться из-за пределов объекта.
+	console.log(person._name); // Иван
+	
+	
+	// добавить сеттер после создания объекта можно через defineProperty
+	Object.defineProperty(person, 'fullName', 
+	{
+	  set(value) 
+	  {
+		[this._name, this._surname] = value.split(" ");
+	  }
+	});
+	
+	person.fullName = "Петр Петров"; // теперь работает сеттер
+	console.log(person.fullName); // Петр Петров
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

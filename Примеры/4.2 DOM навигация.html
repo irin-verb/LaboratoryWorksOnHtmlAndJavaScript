@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+  <!-- Комментарий 1 -->
+  <div>Начало</div>
+  <ul>
+	 <li>Информация</li>
+  </ul>
+  <div>Конец</div>
+  <!-- Комментарий 2 -->
+  <script>
+
+	console.log("Все узлы:");
+
+	for (var i = 0; i < document.body.childNodes.length; ++i) 
+		console.log( document.body.childNodes[i] ); // Text, DIV, Text, UL, ..., SCRIPT
+
+	console.log("Только узлы-элементы:");
+	for (var i = 0; i < document.body.children.length; ++i) 
+		console.log( document.body.children[i] ); // DIV, UL, DIV, SCRIPT
+		
+	/*
+		Всегда верны равенства:
+		elem.firstElementChild === elem.children[0];
+		elem.lastElementChild === elem.children[elem.children.length - 1];
+	*/
+  </script>
+  ...
+</body>
+</html>

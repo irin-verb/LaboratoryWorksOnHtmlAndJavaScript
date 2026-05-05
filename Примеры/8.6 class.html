@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	// Объявление:
+	class User 
+	{
+		_name = "Аноним";
+		_pass = "Не задан";
+		 
+		// в классе может быть только один конструктор
+		constructor(name) 
+		{
+			this._name = name;
+		}
+
+		sayHi() 
+		{
+			console.log("Привет, " + this._name + "!");
+		}
+		
+		// в классе могут быть объявлены геттеры и сеттеры
+		set pass(value)
+		{
+			if(value.length < 3) return;
+			this._pass = value;
+		}
+		
+		get pass()
+		{
+			return this._pass;
+		}
+		
+		get name()
+		{
+			return this._name;
+		}
+		// Методы в классе не разделяются запятой!
+	}
+	
+	// Использование:
+	let user = new User("Иван");
+	user.pass = "1"; // не сработает, т.к. в сеттере задано >=3 символа пароль
+	console.log(user); // {_name: 'Иван', _pass: 'Не задан'}
+	user.pass = "qwerty";
+	console.log(user); // {_name: 'Иван', _pass: 'qwerty'}
+	user.sayHi();
+	
+	// На самом деле технически class это особый вид функций-конструкторов:
+	console.log(typeof User); // function
+
+	// конструкция class User {...} на самом деле:
+	// 1) Создаёт функцию-конструктор с именем User, которая становится результатом 
+	// объявления класса. Код функции берётся из метода constructor (если его нет - 
+	// будет создан пустой конструктор).
+	// 2) Сохраняет все методы (но не объявленные свойства), такие как sayHi, в User.prototype.
+	// 3) При вызове new User(...) методы будут взяты из прототипа, а свойства созданы
+	console.dir(User);
+	
+	// -------------------------------------------------------
+	// наследование осуществляется через extends
+	
+	class Animal
+	{
+		_speed = 0;
+		
+		constructor(name) 
+		{
+			this._name = name;
+		}
+		
+		run(speed) 
+		{
+			this._speed = speed;
+			console.log(this._name + " бежит со скоростью " + this._speed + " км/ч");
+		}
+		
+		stop() 
+		{
+			this._speed = 0;
+			console.log(this._name + " стоит.");
+		}
+		
+		get name() { return this._name; };
+		get speed() { return this._speed; };
+	}
+	
+	
+	class Dog extends Animal
+	{
+		// можно объявлять статические свойства и методы через static
+		static typeName = "Cобака";
+		
+		static printAbout()
+		{
+			console.log("Собака — домашнее животное, одно из наиболее популярных животных-компаньонов.");
+		}
+		
+		constructor(name) 
+		{
+			super(name); // обязательно вызываем конструктор родителя
+		}
+		
+		hide() 
+		{
+			console.log(Dog.typeName + " '" + this.name + "' прячется.");
+		}
+		
+		// переопределение метода stop
+		stop() 
+		{
+			super.stop(); // вызываем родительский метод stop через super
+			this.hide(); // и затем hide
+		}
+	}
+	
+	var dog = new Dog("Барон");
+	dog.run(30); // Барон бежит со скоростью 30 км/ч
+	dog.stop(); // Барон стоит. Cобака Барон прячется.
+	
+	// доступ к статическим методам через имя класса
+	Dog.printAbout(); // Собака — домашнее животное, одно из наиболее популярных животных-компаньонов.
+	
+	// instanceof позволяет проверить, к какому классу 
+	// принадлежит объект, с учётом наследования.
+	console.log(dog instanceof Animal) // true
+	console.log(dog instanceof Dog) // true
+	console.log(dog instanceof Date) // false
+	
+	
+	// ---------------------------------------------
+	// классы могут иметь приватные свойства и методы.
+	// их имена должны начинаться с #:
+	
+	class CoffeeMachine 
+	{
+		#waterLimit = 6; // максимальное кол-во воды
+		#waterAmount = 0; // количество воды внутри
+
+		constructor(waterAmount) 
+		{
+			this.#checkWater(waterAmount);
+			this.#waterAmount = waterAmount;
+			this.printAbout();
+		}
+		
+		printAbout()
+		{
+			console.log("Кофеварка, кол-во воды: " + this.#waterAmount + " литров." );
+		}
+		
+		#checkWater(value) 
+		{
+			if (value < 0) throw new Error("Отрицательный уровень воды");
+			if (value > this.#waterLimit) throw new Error("Слишком много воды");
+		}
+		
+		get waterAmount() 
+		{
+			return this.#waterAmount;
+		}
+
+		set waterAmount(value) 
+		{
+			this.#checkWater(value);
+			this.#waterAmount = value;
+		}
+	}
+
+	// создаём кофеварку
+	var coffeeMachine = new CoffeeMachine(1.5);
+
+	// добавляем воды
+	coffeeMachine.waterAmount += 3.5;
+	
+	coffeeMachine.printAbout(); // Кофеварка, кол-во воды: 5 литров.
+	
+	// при попытке доступа к приватным свойствам и методам будет ошибка!
+	//console.log(coffeeMachine.#waterAmount); // SyntaxError: Private field '#waterAmount' must be declared in an enclosing class
+	//coffeeMachine.#checkWater(2); // SyntaxError: Private field '#checkWater' must be declared in an enclosing class
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

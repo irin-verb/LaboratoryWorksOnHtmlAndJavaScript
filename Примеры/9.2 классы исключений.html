@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	/* Стандартный класс Error содержит поля name, message, stack
+		// "Псевдокод" встроенного класса Error:
+		class Error 
+		{
+		  constructor(message) 
+		  {
+				this.message = message;
+				this.name = "Error"; 
+				this.stack = <стек вызовов>; // нестандартное свойство, но обычно поддерживается
+		  }
+		}
+	*/
+	
+	// использование:
+	try
+	{
+		let obj = {a : -1, b : 10};
+		
+		if(obj.a < 0 || obj.a > 10)
+			throw new Error("Неправильный диапазон значений");
+	}
+	catch(err)
+	{
+		console.log(err); // Error: Неправильный диапазон значений
+	}
+	
+	// -------------------------------------------
+	// Мы можем расширить стандартный класс Error
+	// добавив в него новые свойства
+	
+	class RangeCheckError extends Error 
+	{
+		constructor(a, b) 
+		{
+			super("Неправильный диапазон значений");
+			this.name = "RangeCheckError"; 
+			this.a = a; 
+			this.b = b; 
+		}
+	}
+	
+	try
+	{
+		let obj = {a : -1};
+		
+		if(obj.a < 0 || obj.a > 10)
+			throw new RangeCheckError(0, 10);
+	}
+	catch(err)
+	{
+		console.log(err); // RangeCheckError: Неправильный диапазон значений
+		console.log("Правильный диапазон: ", err.a + "..." + err.b);
+	}
+	
+	
+	// -------------------------------------------
+	// Через оператор instanceof можно проверить к какому типу ошибок
+	// относится исключение
+	
+	class DataError extends Error 
+	{
+		constructor(prop) 
+		{
+			super("Данные повреждены, отсутсвует свойство");
+			this.name = "DataError"; 
+			this.propName = prop; 
+		}
+	}
+	
+	try
+	{
+		let obj = {x : -1};
+		
+		if(obj.a === undefined)
+			throw new DataError("x");
+		else
+		if(obj.a < 0 || obj.a > 10)
+			throw new RangeCheckError(0, 10);
+	}
+	catch(err)
+	{
+		console.log(err); 
+		
+		if(err instanceof RangeCheckError)
+			console.log("Правильный диапазон: ", err.a + "..." + err.b);
+		else
+		if(err instanceof DataError)
+			console.log("Отсутсвует свойство " + err.propName);
+		else
+			throw err; // проброс неизвестного исключения дальше
+	}	
+	
+	// -------------------------------------------
+	// иногда полезно обернуть несколько "низкоуровневых" исключений
+	// в одно "высокоуровневое", чтобы не усложнять код проверки ошибок.
+	// Для этого часто применяют технику "обертывания" исключений
+	
+	class ValidationError extends Error 
+	{
+		constructor(message, errType) 
+		{
+			super(message);
+			this.name = "ValidationError"; 
+			this.errType = errType; 
+		}
+	}
+	
+	function loadObject()
+	{
+		try
+		{
+			let obj = {x : -1};
+			
+			if(obj.a === undefined)
+				throw new DataError("x");
+			else
+			if(obj.a < 0 || obj.a > 10)
+				throw new RangeCheckError(0, 10);
+		}
+		catch(err)
+		{
+			if(err instanceof RangeCheckError)
+				throw new ValidationError("Ошибка в диапазоне значений.", err);
+			else
+			if(err instanceof DataError)
+				throw new ValidationError("Ошибка в структуре данных.", err);
+			else
+				throw err; // проброс неизвестного исключения дальше
+		}
+	}
+	
+	
+	try
+	{
+		loadObject();
+	}
+	catch(err)
+	{
+		// Все конкретные исключения были упакованы в одно общее
+		// сохраняя информацию о себе в поле errType
+		if(err instanceof ValidationError)
+			console.log("Ошибка валидации объекта!\n\t\tПодробности: ", err + "\n\t\tКонкретный тип ошибки: " + err.errType);
+		else
+			throw err;
+	}
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

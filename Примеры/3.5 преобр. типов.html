@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+
+
+<script>
+	
+	console.log(Number("3")); // => 3
+	console.log(String(false)); // => "false"
+	console.log(Boolean([])); // => true
+	console.log(Object(3)); // => new Number(3)
+	
+	console.log(parseInt("3 слова")); // => 3
+	console.log(parseFloat("   3.5 метра")); // => 3.5
+	console.log(parseInt("-12.45")); // => -12
+	console.log(parseFloat(".1")); // => 0.1
+	console.log(parseInt(".1")); // => NaN, целые не могут начинаться с "."
+	console.log(parseInt("$72")); // => NaN, целые не могут начинаться с "$"
+	
+	var str1 = (5).toString();
+	var str2 = [1,2,3].toString();
+	console.log(str1,str2); 
+	
+
+	
+</script>
+
+<head>
+<body> 
+</body>
+</html>

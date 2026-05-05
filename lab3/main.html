@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8"> 
+<style>
+    .my_class {
+        display: inline;
+    } 
+</style>
+<script src="script.js"></script>
+</head>
+
+<body>
+	<!-- форма для ввода диапазона табулирования функции-->
+	<form>
+		Табулирование функции<br>
+		<img src="task.png" width='300'>
+		<br>
+		X_0 (нач.X):
+		<input type="text" id="begX" value="0">
+		X_n (кон.X):
+		<input type="text" id="endX" value="6">
+		h_X (шаг X):
+		<input type="text" id="stepX" value="2">
+		<br>
+
+		Y_0 (нач.Y):
+		<input type="text" id="begY" value="0">
+		Y_n (кон.Y):
+		<input type="text" id="endY" value="3">
+		h_Y (шаг Y):
+		<input type="text" id="stepY" value="1">
+		<br>
+
+		A:
+		<input type="text" id="A" value="3">
+		NM1 (из [2,6]):
+		<input type="text" id="NM1" value="4">
+		NM2 (из [2,6]):
+		<input type="text" id="NM2" value="4">
+		<br><br>
+		<input type="button" id="button" value="Табулировать" 
+			onclick="tabFunc(form.begX.value, form.endX.value, form.stepX.value,
+							form.begY.value, form.endY.value, form.stepY.value,
+							form.A.value, form.NM1.value, form.NM2.value)">
+	</form>
+	
+	<div id="result">
+	</div>
+</body>
+</html>

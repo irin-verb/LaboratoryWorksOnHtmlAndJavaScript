@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+
+
+<script>
+	
+	var scope = "global";
+	
+	function getScope()
+	{
+		var scope = "local";
+		return scope; 
+	}
+
+	console.log(scope); // "global"
+	console.log(getScope()); // "local"
+
+	// фигурные скобки не задают область видимости для var!
+	var i = 5;
+	if(true)
+	{
+		var i;
+		i = 6;
+	}
+	console.log(i); // 6!
+	
+	// но задают для let
+	let d = 5;
+	if(true)
+	{
+		let d;
+		d = 6;
+	}
+	console.log(d); // 5!
+	
+	//константы можно задавать через const:
+	const c = 10;
+	//c = 5; // Assignment to constant variable!
+	
+	
+	// const гарантирует только отсутсвие присвоение идентификатору другого значения!
+	const arr = [4,5,6];
+	arr[0]=888; 
+	console.log(arr); 
+	
+	//arr=[1,2,3];  //Assignment to constant variable!
+
+	
+</script>
+
+<head>
+<body> 
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	// typeof не может отличить простой объект от массива:
+	console.log(typeof {}); // "object"
+	console.log(typeof []); // "object"
+	
+	// поэтому для определения типа массива был введен метод Array.isArray(value)
+	console.log(Array.isArray({})); // false
+	console.log(Array.isArray([])); // true
+
+	// необязательный параметр thisArg позволяет поменять контекст this
+	// в методах массива, принимающих функцию в качестве параметра
+	
+
+	var armyRange = {
+	  minAge: 18,
+	  maxAge: 27
+	};
+
+	var men = [
+	  {age: 16},
+	  {age: 20},
+	  {age: 23},
+	  {age: 30}
+	];
+	
+	function canJoinArmy(man) {
+		return man.age >= this.minAge && man.age < this.maxAge;
+		// по умолчанию здесь this указывал бы на глобальный объект window,
+		// т.к. все объявленные функции в глобальной области видимости по
+		// факту являются методами window
+	}
+
+	// найти мужчин, для которых canJoinArmy возвращает true
+	var soldiers = men.filter(canJoinArmy, armyRange);
+
+	soldiers.forEach(function(soldier) { console.log(soldier.age);}); // 20 23
+
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

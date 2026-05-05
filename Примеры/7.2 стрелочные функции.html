@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	
+	// пример объявления стрелочной функции sum:
+	var sum = (a, b) => a + b;
+	console.log(sum(2, 3));
+	
+	/* 
+		Эта стрелочная функция представляет собой более короткую форму:
+		var sum = function(a, b) 
+		{
+			return a + b;
+		}
+	*/
+	
+	// если в стрелочной функции один параметр, то скобки можно опустить
+	var square = x => x * x;
+	console.log(square(5));
+	
+	// если параметров у функции нет, то пустые скобки нужны обязательно
+	var sayHello = () => console.log("Hello!");
+	sayHello();
+	
+	// Стрелочные функции удобно использовать в выражениях
+	var age = 15;
+	var welcome = (age < 18) ? 
+					() => console.log("Привет!") : 
+					() => console.log("Здравствуйте!");
+	welcome();
+	
+	// если для стрелочной функции требуется несколько операторов, то для
+	// нее можно указать обычное тело функции (в этом случае для возврата
+	// значения нужно указывать return)
+	var mul = (a, b) => 
+	{
+		var result = a * b;
+		return result;
+	}
+	console.log(mul(3, 4));
+	
+	
+	// стрелочные функции часто используют как значения аргументов - объектов функций
+	var array = [6, 5, 4, 3, 6, 3, 1, 2, 8, 6, 5];
+	
+	// взять только уникальные чётные элементы, возвести их в квадрат и отсортировать по убыванию
+	array = array
+			.filter((elem, pos, self) => self.indexOf(elem, pos + 1) == -1 && elem % 2 == 0)
+			.map(elem => elem * elem) 
+			.sort( (a, b) => b - a);
+			
+	console.log(array); // [64, 36, 16, 4]
+	
+	
+	// --------------------------------------
+	// стрелочные функции берут контекст из внешнего объявления
+	var group = 
+	{
+		title: "943",
+		students: ["Иван Иванов", "Петр Петров", "Максим Максимов"],
+
+		showList: function() 
+		{
+			console.log(this);
+
+			this.students.forEach(student => console.log(this.title + ': ' + student));
+			/*
+				внутри forEach использована стрелочная функция, таким образом 
+				this.title в ней будет иметь точно такое же значение, как в 
+				методе showList, т.е. group.title.
+				Если бы мы использовали «обычную» функцию, была бы ошибка
+			*/
+		},
+		
+		// хотя можно обойти такую ошибку через thisArg
+		showList2: function() 
+		{
+			this.students.forEach(
+				function(student) 
+				{ 
+					console.log(this.title + ': ' + student); 
+				},
+				this); // thisArg
+		}
+	};
+
+	group.showList();
+	group.showList2();
+	// 943: Иван Иванов
+	// 943: Петр Петров
+	// 943: Максим Максимов
+	
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

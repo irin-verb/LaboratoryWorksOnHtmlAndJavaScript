@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+  <!-- Комментарий 1 -->
+  <div id = "begin"><b>Начало</b></div>
+  <ul id = "ulElem">
+	 <li>Первый пункт</li>
+	 <li>Второй пункт</li>
+	 <li>Третий пункт</li>
+	 <li>Четвертый пункт</li>
+  </ul>
+  <div class="article">Статья</div>
+  <div class="long article">Длинная статья</div>
+  <div><a href="http://www.rsreu.ru" id="rgrtuLink">Сайт РГРТУ</a></div>
+  <div id="end">Конец</div>
+  
+  <!-- Комментарий 2 -->
+  
+  <script>
+	
+	var elem = document.getElementById("begin");
+	console.log("nodeType: " + elem.nodeType); // "1" - элемент
+	console.log("nodeName: " + elem.nodeName); // DIV
+	console.log("tagName: " + elem.tagName); // DIV
+	
+	// свойство tagName есть только у элементов, свойство nodeName определено для любых узлов Node , 
+	// для элементов оно равно tagName , а для не-элементов обычно содержит строку с типом узла
+	
+	console.log("innerHTML: " + elem.innerHTML); // <b>Начало</b>
+	console.log("outterHTML: " + elem.outerHTML); // <div id = "begin"><b>Начало</b></div>
+	
+	elem = document.getElementById("end").nextSibling.nextSibling;
+	console.log("data: " + elem.data); // Комментарий 2
+	// innerHTML есть только у элементов, у других узлов (текст и комментарии) можно 
+	// получить содержимое через data
+	
+	// textContent содержит весь текст узла, за вычетом всех тегов
+	console.log("Содержимое списка: " + document.body.children[1].textContent);
+	
+	// hidden может скрывать элемент в документе
+	document.getElementsByClassName("article")[0].hidden = true;
+	
+	// У DOM-узлов есть и другие свойства, зависящие от типа, например href – адрес ссылки
+	console.log("Ссылка: " + document.getElementById("rgrtuLink").href);
+	
+	// элемент всегда можно вывести в консоль вызовом console.dir(элемент)
+	// console.dir выводит аргумент не в «красивом» виде, как объект, который можно развернуть и исследовать
+	elem = document.getElementById("begin");
+	console.dir(elem);
+	
+  </script>
+  ...
+</body>
+</html>

@@ -1,0 +1,70 @@
+<head>
+<script>
+
+	// объект window
+	console.log("Размер клиентской части окна в пикселях: " + 
+				window.innerWidth + 
+				"x" + 
+				window.innerHeight);
+	/*
+	Некоторые другие методы:
+	window.open() - открыть новое окно
+	window.close() - закрыть текущее окно
+	window.moveTo() - переместить текущее окно
+	window.resizeTo() - изменить размер текущего окна
+	*/
+	
+	// При обращении к объектам BOM и DOM глобальный объект window
+	// можно не указывать, т.е. вместо "window.navigator" писать просто "navigator"
+	
+	
+	// объект navigator
+	console.log("Имя приложения: " + navigator.appName);
+	console.log("Кодовое имя: " + navigator.appCodeName);
+	console.log("Движок: " + navigator.product);
+	console.log("Версия: " + navigator.appVersion);
+	console.log("Пользовательский агент: " + navigator.userAgent);
+	console.log("Операционная система: " + navigator.platform);
+	console.log("Язык: " + navigator.language);
+	console.log("Подключёт ли интернет: " + navigator.onLine);
+	
+	// объект location
+	console.log("Текущий URL: " + location.href);
+	console.log("Имя хоста: " + location.hostname);
+	console.log("Текущий путь страницы: " + location.pathname);
+	console.log("Протокол: " + location.protocol);
+	console.log("Порт: " + location.port);
+	
+	//переход на новый адрес:
+	//window.location.assign("https://google.ru")
+	
+	// объект screen
+	console.log("Размеры экрана: " + screen.width + "х" + screen.height);
+	console.log("Глубина цвета: " + screen.colorDepth);
+	
+	// объект history
+	/*Некоторые методы:
+	history.back() - аналогично нажатию на кнопку браузера "Назад"
+	history.forward() - аналогично нажатию на кнопку браузера "Вперед"
+	*/
+	
+	// объект XMLHttpRequest
+	/*
+	function reqListener() 
+	{
+		console.log(this.responseText);
+	}
+	
+	let req = new XMLHttpRequest(); 
+	req.onload = reqListener;
+	req.open("GET", "https://mydomain.ru/");
+	req.send();
+	//*/
+
+</script>
+</head>
+<body>
+</body>
+
+
+

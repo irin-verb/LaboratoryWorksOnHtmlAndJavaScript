@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	
+	var a = [];
+	a[0] = "zero"; // добавляем элементы присвоением новых индексов
+	a[1] = "one"; 
+	a[a.length] = "two"; // Добавить элемент в конец можно через свойство length
+	a.push("three", "four"); // несколько элементов в конец можно добавить через метод push
+	
+	// через метод toString() можно получить список элементов
+	// в текстовом виде
+	console.log(a.toString()); // zero,one,two,three,four
+	// вывод просто объекта массива в консоли будет в древовидном
+	// "объектном" виде
+	console.log(a);
+	
+	// добавить два элемента в начало массива со сдвигом всех элементов
+	a.unshift("sub-zero 1", "sub-zero 2");
+	console.log(a); // 'sub-zero 1', 'sub-zero 2', 'zero', 'one', 'two', 'three', 'four'
+	
+	// удалять элементы можно через оператор delete (получается разреженный массив)
+	delete a[3]; // теперь в массиве отсутсвует элемент с индексом 3
+	console.log(a); // 'sub-zero 1', 'sub-zero 2', 'zero', пусто, 'two', 'three', 'four'
+	
+	// уменьшить массив с конца можно присвоив свойству length новое значение
+	a.length -= 2;
+	console.log(a); // 'sub-zero 1', 'sub-zero 2', 'zero', пусто, 'two'
+	a.length += 2; // увеличение даст разреженный массив
+	console.log(a); // 'sub-zero 1', 'sub-zero 2', 'zero', пусто, 'two', пусто, пусто
+	a.length -= 2;
+	
+	var elem = a.pop(); // удалить и возвратить последний элемент
+	console.log(a); // 'sub-zero 1', 'sub-zero 2', 'zero', пусто
+	console.log(elem); // two
+	
+	elem = a.shift(); // удалить и возвратить первый элемент (со сдвигом остальных элементов)
+	console.log(a); // 'sub-zero 2', 'zero', пусто
+	console.log(elem); // sub-zero 1
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

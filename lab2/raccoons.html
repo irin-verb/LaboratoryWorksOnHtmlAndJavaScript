@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Милые енотики</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+	<header>
+		<nav>
+			<ul>
+				<li><a class="main" href="main.html">Животинки</a></li>
+				<li><a href="cats.html">Котики</a></li>
+				<li><a href="raccoons.html">Енотики</a></li>
+				<li><a href="rodents.html">Грызунчики</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<div class="body">
+		<h1>Енотики</h1>
+		<p>Еноты очень милые!</p>
+		<button id = "colorButton" onClick="
+			var colors = ['red','blue','black','white','pink','green','yellow'];
+			let index = Math.floor(Math.random() * (colors.length - 1));
+			var element = document.getElementById('colorButton');
+			element.style.backgroundColor = colors[index];
+		">
+			Потрогай эту кнопку. А енотика не трогай!!
+		</button>
+		<hr>
+		<img src="raccoon.jpeg" onMouseMove="alert('НЕ ТРОГАЙ МОЕГО ЕНОТИКА!!!');">
+		<hr>
+		<a href="JavaScript:alert('Ты нажал сюда');">Сюда тоже можешь нажать</a>
+		<hr>
+		<a href="JavaScript:alert('Тебе не надоело? Потрогай уже енотика.');">Или сюда</a>
+		<hr>
+	</div>
+
+</body>
+</html>

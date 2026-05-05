@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	
+	// когда в вызове функции аргументов меньше объявленных параметров
+	// недостающие аргументы получают значение undefined
+	// необязательные аргументы должны завершать список аргументов, 
+	// чтобы их можно было опустить!
+	function getPropertyNamesAndVals(o,  a /* необязательный */)
+	{
+	    // если a неопределен, создаём новый массив
+		if(a === undefined) a = [];
+		// можно записать короче:
+		// a = a || [];
+		
+		for(let property in o)
+			a.push(property + " = " + o[property].toString());
+		
+		return a;
+	}
+	
+	var obj = {prop1: 1, prop2: "2", prop3: [3]};
+	var point = {x: 5, y: 20};
+	var person = {name: "Иван", age: 35};
+	
+	var names = getPropertyNamesAndVals(obj); // второй аргумент по умолчанию []
+	getPropertyNamesAndVals(point, names);
+	getPropertyNamesAndVals(person, names);
+	console.log(names);
+	
+	// ------------------------------------------
+	// В Javascript можно передавать больше аргументов, чем указано в объявлении
+	// функции в параметрах
+	
+	// функция max принимает любое число аргументов:
+	function max()
+	{
+		var m = arguments.length == 0 ? undefined : arguments[0];
+		
+		for(let i = 1; i < arguments.length; ++i)
+			if(arguments[i] > m)
+				m = arguments[i];
+		return m;
+	}
+	
+	console.log(max()); // undefined
+	console.log(max(6)); // 6
+	console.log(max(4, 3)); // 4
+	console.log(max(5, 2, 7, 8, 1)); // 8
+	console.log(max(0, 7, 9, 6, 4, 6, 3, 3)); // 9
+	
+	
+	// arguments и именованные параметры являются псевдонимами
+	// поэтому изменение arguments ведет к изменению именованных параметров
+	f(5);
+	function f(x)
+	{
+		console.log(x); // 5
+		arguments[0] = null;
+		console.log(x); // null
+	}
+	
+	
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	
+	// функция, возвращающая уникальное целое число при каждом своем вызове
+	function uniqueID()
+	{
+		// инициализировать свойство id если оно не было добавлено до этого
+		if(uniqueID.id === undefined)
+			uniqueID.id = 0;
+			
+		return uniqueID.id++; // увеличить и вернуть id
+	}
+	
+	console.log(uniqueID()); 	// 0
+	console.log(uniqueID()); 	// 1
+	console.log(uniqueID()); 	// 2
+	console.log(uniqueID.id); 	// 3, свойство id хранит следующий свободный номер
+	
+	// -----------------------------------
+	
+	// функция факториала сохраняет результаты предыдущих вычислений в своём свойстве
+	// для увеличения скорости расчёта
+	function fact(n)
+	{
+		// валидация параметра
+		n = n < 1 ? 1 : n;
+		
+		if(fact.cache === undefined)
+			fact.cache = [, 1]; // инициализируем кэш базовым случаем
+			
+		if(!(n in fact.cache)) // если значение не сохранялось ранее
+			fact.cache[n] =  n * fact(n - 1); // вычислить и сохранить
+
+		return fact.cache[n]; // вернуть сохранёный в кеше результат
+	}
+	console.log(fact.cache);
+	console.log(fact(5)); // 120
+	console.log(fact.cache.toString());
+	console.log(fact(15)); // 1307674368000
+	console.log(fact.cache.toString());
+
+	
+	// функции даже могут иметь свои методы
+	fact.getCached = function(n)
+	{
+		return this.cache === undefined? undefined : this.cache[n];
+	}
+	
+	
+	console.log(fact.getCached(8));		// 40320
+	console.log(fact.getCached(15));	// 1307674368000
+	console.log(fact.getCached(20));	// undefined, в кеше нет такого результата
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

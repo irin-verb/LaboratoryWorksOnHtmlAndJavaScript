@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var obj = {
+		prop1 : "значение 1",
+		prop2 : "значение 2"
+	};
+	
+	// получаем полный дескриптор свойства
+	var dsc = Object.getOwnPropertyDescriptor(obj, 'prop1');
+	console.log(dsc); //{value: 'значение 1', writable: true, enumerable: true, configurable: true}
+	// по умолчанию все флаги выставлены в true
+	
+	// Создать новое свойство через метод Object.defineProperty:
+	Object.defineProperty(obj, "prop3", {
+	  value: "значение 3",
+	  "writable": false,
+	  "enumerable": false,
+	  "configurable": false
+	});
+	
+	obj.prop3 = "другое значение"; // Ошибки появляются только в строгом режиме, иначе инструкция просто игнорируется
+	console.log(obj.prop3); // Не изменилось: значение 3
+	
+	for(let p in obj)
+	 console.log(p); // prop1 prop2 (prop3 отсуствует т.к. оно enumerable: false)
+	 
+	delete obj.prop3; // нельзя удалить! т.к. свойство configurable: false
+	console.log(obj); // {prop1: 'значение 1', prop2: 'значение 2', prop3: 'значение 3'}
+	
+	
+	// через defineProperties можно создать сразу несколько свойств с нужными флагами
+	Object.defineProperties(obj, 
+	{
+		prop4: { value: "значение 4", writable: false },
+		prop5: { value: "значение 5", writable: false }
+	});
+	console.log(obj); // {prop1: 'значение 1', prop2: 'значение 2', prop3: 'значение 3', prop4: 'значение 4', prop5: 'значение 5'}
+	
+	// получить все дескрипторы свойств объекта
+	console.log(Object.getOwnPropertyDescriptors(obj)); // {prop1: {…}, prop2: {…}, prop3: {…}, prop4: {…}, prop5: {…}}
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

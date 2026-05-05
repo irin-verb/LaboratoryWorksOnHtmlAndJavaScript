@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+
+	<style>
+
+		input {
+			margin-top: 10px;
+		}
+
+		form, div {
+			margin-top: 20px;
+		}
+
+		table {
+			border-spacing: 0px;
+		}
+
+        .message {
+            margin: 15px;
+            padding: 15px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            color: #3c763d;
+            background-color: #dff0d8;
+        }
+
+	</style>
+
+	<script>
+
+		function pushWarning(text) {
+            var timeout = 4000;
+            var div = document.createElement('div');
+            div.className = "message";
+            document.body.appendChild(div);
+			div.appendChild(document.createTextNode(text));
+            setTimeout(function () {
+                div.parentNode.removeChild(div);
+            }, timeout);
+        }
+
+		function isNumeric(n) {
+			return !isNaN(parseInt(n)) && isFinite(n);
+		}
+
+		function createTable(size) {
+			var rez = document.getElementById("result");
+
+			document.getElementById("update").hidden = true;
+
+			if (!isNumeric(size)) {
+				rez.innerHTML = "<b>Ошибка!</b> Проверьте введёное значение<br>";
+				return;
+			}
+
+			size = parseFloat(size);
+
+			if (size < 1 || size > 50) {
+				rez.innerHTML = "<b>Ошибка!</b> C такими размерами нельзя построить фигуру<br>";
+				return;
+			}
+
+			rez.innerHTML = "";
+			document.getElementById("update").hidden = false;
+
+			// создаём элементы table и tbody (по стандарту ячейки таблицы должны быть в теге tbody)
+			var table = document.createElement("table");
+			var tbody = document.createElement("tbody");
+			table.appendChild(tbody);
+
+			var x, y;
+			var isRed; //заполняется ли ячейка числом
+			var isBlue;
+			var X = size;
+			var Y = size + (size - 1);
+			for (x = 0; x < X; x++) {
+				// создаём строку таблицы
+				let row = document.createElement("tr");
+
+				for (y = 0; y < Y; y++) {
+					isBlue = y == ((Y - 1) / 2 - x) || y == ((Y - 1) / 2 + x);
+					isRed = y > ((Y - 1) / 2 - x) && y < ((Y - 1) / 2 + x);
+
+					// создаём ячейку с нужными аттрибутами
+					let cell = document.createElement("td");
+					cell.textContent = isBlue ? (x + 1).toString() : "";
+					//let cellText = document.createTextNode(isBlue ? x + 1 : "");
+					cell.width = "25px";
+					cell.height = "30px";
+					cell.align = "center";
+					cell.bgColor = isRed ? "red" : isBlue ? "aqua": "transparent";
+
+					//cell.appendChild(cellText);
+					row.appendChild(cell);
+				}
+				tbody.appendChild(row);
+			}
+			rez.appendChild(table);
+		}
+
+
+		function rotateTable() {
+            var oldBody = document.getElementsByTagName("tbody")[0];
+            var newBody = document.createElement("tbody");
+
+			var X = document.getElementById("result").getElementsByTagName("tr").length;
+			var cells = document.getElementById("result").getElementsByTagName("td");
+			var Y = cells.length / X;
+
+			for (y = Y - 1; y >= 0; y--) {
+                let row = document.createElement("tr");
+                for (x = 0; x < X; x++) {
+                    let cell= document.createElement("td");
+					cell = cells[y + x * Y].cloneNode(true);
+                    row.appendChild(cell);
+				}
+                newBody.appendChild(row);
+			}
+
+            var table = document.getElementsByTagName("table")[0];
+			table.replaceChild(newBody, oldBody);
+		}
+
+
+		function discolorRows(strOfRows) {
+			var X = document.getElementById("result").getElementsByTagName("tr").length;
+			var flag = true;
+			var rows = strOfRows.split(",");
+            var rows_numbers = [];
+			for (i = 0; i < rows.length; i++) {
+				if (!(isNumeric(rows[i]) && parseInt(rows[i]) >= 0 && parseInt(rows[i]) < X)) {
+					flag = false; break;
+				}
+				rows_numbers.push(parseInt(rows[i]));
+			}
+			if (flag) {
+				var cells = document.getElementById("result").getElementsByTagName("td");
+                var Y = cells.length / X;
+                for (x = 0; x < X; x++) for (y = 0; y < Y; y++) 
+					if (rows_numbers.indexOf(x) != -1) cells[y + x * Y].bgColor = "transparent";
+			}
+			else pushWarning("Через запятую должны быть целые числа от нуля до " + X);
+		}
+
+
+		function fillRedCellsBySummOrMult(summFlag) {
+            var X = document.getElementById("result").getElementsByTagName("tr").length;
+            var cells = document.getElementById("result").getElementsByTagName("td");
+			var Y = cells.length / X;
+			var res;
+            for (x = 0; x < X; x ++)
+				for (y = 0; y < Y; y++) {
+					if (cells[y + x * Y].bgColor == "red") {
+                        res = summFlag ? 0 : 1;
+                        for (j = 0; j < Y; j++) {
+                            let elem = parseInt(cells[j + x * Y].textContent);
+                            if (isNumeric(elem))
+                                res = summFlag ? res + elem : res * elem;
+                        }
+                        cells[y + x * Y].textContent = res.toString();
+					}
+                }
+		}
+
+
+		function init() {
+
+			var rez = document.createElement("div");
+			rez.id = "result";
+			document.body.appendChild(rez);
+
+			document.getElementById("update").hidden = true;
+		}
+
+	</script>
+</head>
+<body onload="init()">
+	<form>
+		Введите размер фигуры (не более 50х50):<br>
+		<input type="text" id="size"><br>
+		<input type="button" id="button" value="Построить"
+			   onclick="createTable(form.size.value)">
+	</form>
+	<form id="update">
+		Заполнение красных ячеек суммой/произведением элементов строки:<br>
+		<input type="radio" name="calcType" value="true" checked>Сумма<br>
+		<input type="radio" name="calcType" value="">Произведение<br>
+		<input type="button" id="buttonDiscolor" value="Заполнить"
+			   onclick="fillRedCellsBySummOrMult(form.calcType.value)">
+		<br><br>
+
+		Номера строк:<br>
+		<input type="text" id="discoloringRows" value="1,4,5">
+		<input type="button" id="buttonDiscolor" value="Обесцветить"
+			   onclick="discolorRows(form.discoloringRows.value)">
+		<br><br>
+
+		<input type="button" id="buttonRotate" value="Повернуть"
+			   onclick="rotateTable()">
+		<br>
+	</form>
+</body>
+</html>

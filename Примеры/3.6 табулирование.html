@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+
+<script>
+
+/*
+	Табулируйте функцию вида f(x)=sin(x)+cos(x)
+*/
+
+//функция табулирования
+function f(x) 
+{
+    return Math.sin(x) + Math.cos(x);
+}
+
+//функция определения числового значения
+function isNumeric(n) 
+{
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+//табулирование функции от x0 до xn с шагом sx
+function tabFunc(x0, xn, sx) 
+{
+    //получаем ссылку на элемент div для вывода значений
+    var rez = document.getElementById("result");
+
+    //если значения параметров не числовые - выводим ошибку
+    if (!isNumeric(x0) || !isNumeric(xn) || !isNumeric(sx)) 
+	{
+        rez.innerHTML = "Ошибка! Проверьте введёные значения<br>";
+        return;
+    }
+
+    //преобразуем параметры в числа с плавающей точкой
+    x0 = parseFloat(x0);
+    xn = parseFloat(xn);
+    sx = parseFloat(sx);
+
+    //проверим допустимость границ диапазона табулирования
+    if ((x0 > xn && sx > 0) || (x0 < xn && sx < 0) || x0 == xn || sx == 0) 
+	{
+        rez.innerHTML = "Ошибка! C такими значениями нельзя табулировать функцию<br>";
+        return;
+    }
+
+    // очищаем содержание элемента div и выводим заголовок
+	// свойство innerHTML позволяет заменить содержимое элемента
+    rez.innerHTML = "Результаты табуляции от " + x0 + " до " + xn + " c шагом " + sx + ":<br>";
+
+    //табулируем функцию и выводим значение в элемент div
+    var x;
+	var s = "<table width='600'>"; // накапливаем теги разметки в переменную s, чтобы не сломать вёрстку
+    for (x = x0; x0 < xn ? x < xn + sx * 0.5: x > xn + sx * 0.5; x += sx) 
+	{
+        s += "<tr><td>" + x + "</td><td>" + f(x) + "</td></tr>";
+    }
+	s += "</table>";
+	
+	console.log(s);
+	rez.innerHTML += s; // добавляем вёрстку в содержимое элемента
+}
+
+			
+</script>
+</head>
+<body>
+	<!-- форма для ввода диапазона табулирования функции-->
+	<form>
+		Табулирование функции f(x)=sin(x)+cos(x)<br>
+		<br>
+		Введите начальное значение X:<br>
+		<input type="text" id="begX" value=""><br>
+		Введите конечное значение X:<br>
+		<input type="text" id="endX" value=""><br>
+		Введите шаг:<br>
+		<input type="text" id="stepX" value=""><br>
+		<br>
+		<input type="button" id="button" value="Табулировать" 
+			onclick="tabFunc(form.begX.value,form.endX.value,form.stepX.value)">
+	</form>
+	
+	<!--элемент div для вывода результатов табулирования-->
+	<div id="result">
+	</div>
+</body>
+</html>

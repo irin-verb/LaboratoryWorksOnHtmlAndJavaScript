@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var empty = {}; // объект без свойств
+	var point = {x : 0, y : 0}; // объект с двумя свойствами
+	var point2 = {x : point.x + 10, y : point.y - 20}; // можно использовать выражения для значений свойств
+	
+	// имена свойств с пробелами и дефисами, поэтому
+	// используются строковые литералы в качестве имен свойств
+	var book = {
+		"main title" : "War and Peace",
+		'sub-title' : "Historical Novel",
+		
+		// значениями свойств также могут быть объекты
+		author : {
+			firstName : "Leo",
+			surName : "Tolstoy"
+		}
+	};
+	
+	
+	// оператор new также создаёт объект
+	var o = new Object(); // аналогично {}
+	var a = new Array();  // аналогично []
+	var d = new Date();  // создать объект Date
+	
+	// получение значений свойств
+	console.log(book.author.firstName); // Leo
+	console.log(book["main title"]); // War and Peace
+	
+	// передача по ссылке! теперь writer и book.author 
+	// указывают на один и тот же объект
+	var writer = book.author; 
+	writer.firstName = "none";
+	console.log(writer.firstName); // none
+	console.log(book.author.firstName); // none
+</script>
+</head>
+<body>
+</body>
+</html>
+

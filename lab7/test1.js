@@ -1,0 +1,246 @@
+const characteristicCalculators = {
+    'maxPoint': calculateMaxPoint,
+    'discontinuityPoints': calculateDiscontinuityPoints,
+    'positiveValueCount': calculatePositiveValueCount
+};
+
+function memoize(func) {
+    const cache = new Map();
+    return function (...args) {
+        const key = args.join('-');
+        if (cache.has(key)) {
+            console.log(`Retrieving result from cache for arguments: ${args}`);
+            console.log(`Cache contents:`);
+            cache.forEach((value, key) => console.log(`${key} => ${value}`));
+            return cache.get(key);
+        }
+        const result = func(...args);
+        cache.set(key, result);
+        console.log(`Calculating result for arguments: ${args}`);
+        console.log(`Cache contents:`);
+        cache.forEach((value, key) => console.log(`${key} => ${value}`));
+        return result;
+    };
+}
+
+
+function debug(func) {
+    return function (...args) {
+        const startTime = performance.now();
+        const result = func(...args);
+        const endTime = performance.now();
+        console.log(`Time: ${endTime - startTime} ms, Args: ${args}, Result: ${result}`);
+        return result;
+    };
+}
+
+function countCalls(func) {
+    let callCount = 0;
+    const decoratedFunc = function (...args) {
+        callCount++;
+        return func(...args);
+    };
+    decoratedFunc.getCallCount = function () {
+        return callCount;
+    };
+    decoratedFunc.resetCallCount = function () {
+        callCount = 0;
+    };
+    decoratedFunc.printCallCount = function () {
+        console.log(`Number of function calls: ${callCount}`);
+    };
+    return decoratedFunc;
+}
+
+
+
+let myChart;
+
+function calculateCharacteristics() {
+    const outputDiv = document.getElementById('output'); // Объявление переменной outputDiv
+    outputDiv.innerHTML = ''; // Очистка содержимого outputDiv
+
+    const rangeStart = parseFloat(document.getElementById('rangeStart').value);
+    const rangeEnd = parseFloat(document.getElementById('rangeEnd').value);
+    const step = parseFloat(document.getElementById('step').value);
+    const selectedFunction = document.getElementById('functionSelect').value;
+    const selectedCharacteristics = Array.from(document.getElementById('characteristicsSelect').selectedOptions, option => option.value);
+    const selectedVariants = Array.from(document.getElementById('functionVariantSelect').selectedOptions, option => option.value);
+
+    const selectedFunctionImpl = getFunctionImpl(selectedFunction, selectedVariants);
+    const originalFunction = window.originalFunction || selectedFunctionImpl;
+
+    const result = calculate(selectedFunctionImpl, selectedCharacteristics, rangeStart, rangeEnd, step);
+    if (selectedVariants.includes('counted')) {
+        originalFunction.printCallCount();
+        originalFunction.resetCallCount();
+    }
+
+    displayResults(result);
+}
+
+
+
+function calculate(func, selectedCharacteristics, rangeStart, rangeEnd, step) {
+    const xValues = Array.from({ length: Math.floor((rangeEnd - rangeStart) / step) + 1 }, (_, i) => rangeStart + i * step);
+    const yValues = xValues.map(x => func(x));
+
+    const properties = selectedCharacteristics.map(characteristic => {
+        const calculator = characteristicCalculators[characteristic];
+        if (calculator) {
+            return calculator(yValues, xValues);
+        } else {
+            return null;
+        }
+    });
+
+
+    return { xValues, yValues, properties };
+}
+
+function calculateMaxPoint(yValues) {
+    let maxPoint = { x: null, y: null };
+
+    yValues.forEach((y, index) => {
+        if (!isNaN(y) && (maxPoint.y === null || y > maxPoint.y)) {
+            maxPoint = { x: index, y };
+        }
+    });
+
+    return maxPoint;
+}
+
+function calculateDiscontinuityPoints(yValues, xValues) {
+    const discontinuityPoints = [];
+
+    // Проверяем на разрыв в точке (непрерывность y)
+    for (let i = 1; i < yValues.length; i++) {
+        if (isNaN(yValues[i]) || !isFinite(yValues[i]) || isNaN(yValues[i - 1]) || !isFinite(yValues[i - 1])) {
+            // Найдем предыдущую точку, чтобы добавить ее как начало разрыва
+            const prevX = xValues[i - 1];
+            const prevY = yValues[i - 1];
+            if (prevY !== null) {
+                discontinuityPoints.push({ x: prevX, y: prevY });
+            }
+        }
+    }
+
+    // Проверяем на разрыв в асимптоте (непрерывность x)
+    for (let i = 0; i < xValues.length - 1; i++) {
+        const xDiff = Math.abs(xValues[i + 1] - xValues[i]);
+        if (xDiff > 2 * (xValues[1] - xValues[0])) { // Проверяем, что разрыв превышает двойной шаг
+            if (yValues[i] !== null) {
+                discontinuityPoints.push({ x: xValues[i], y: null }); // Точка разрыва в асимптоте
+            }
+        }
+    }
+
+    return discontinuityPoints;
+}
+
+
+
+
+
+
+function calculatePositiveValueCount(yValues) {
+    let count = 0;
+
+    yValues.forEach(y => {
+        if (y > 0) {
+            count++;
+        }
+    });
+
+    return count;
+}
+
+function displayResults(result) {
+    const outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = '';
+
+    const properties = result.properties;
+    properties.forEach((property, index) => {
+        const characteristicDiv = document.createElement('div');
+        characteristicDiv.innerHTML = `<p>Characteristic ${index + 1}: ${JSON.stringify(property)}</p>`;
+        outputDiv.appendChild(characteristicDiv);
+    });
+
+    const ctx = document.getElementById('chart').getContext('2d');
+    if (myChart) {
+        myChart.destroy(); // Уничтожаем предыдущий график, если он уже существует
+    }
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: result.xValues,
+            datasets: [{
+                label: 'Function',
+                data: result.yValues,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    });
+}
+
+let originalFunction;
+
+function getFunctionImpl(selectedFunction, selectedVariants) {
+    switch (selectedFunction) {
+        case 'f1':
+            originalFunction = f1;
+            func = f1;
+            break;
+        case 'f2':
+            originalFunction =
+                f2;
+            func = f2;
+            break;
+        case 'f3':
+            originalFunction = f3;
+            func = f3;
+            break;
+        default:
+            break;
+    }
+
+    const variantFunctions = {
+        'memoized': memoize,
+        'debug': debug,
+        'counted': countCalls,
+    };
+
+    selectedVariants.forEach(variant => {
+        const variantFunction = variantFunctions[variant];
+        if (variantFunction) {
+            func = variantFunction(func);
+        }
+    });
+
+    return func;
+}
+
+
+
+
+function f1(x) {
+    return (Math.pow(Math.log(x - 5), 5) - Math.cos(x)) / (x - Math.sqrt(5 * Math.sin(x)));
+}
+
+function f2(x) {
+    return Math.log(x - 5) - Math.pow(Math.log(x - 2), 3) + 1 / (x + 5 * Math.sin(x));
+}
+
+function f3(x) {
+    return Math.sqrt((Math.pow(Math.E, 3) + x) / 6) + (Math.sin(x - 7)) / 4;
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+
+	<a href="#" id="link">Ссылка</a><br>
+	<div id="elem" about="tag info" class="myClass"></div>
+	
+	<script>
+		
+		// Пример различия значений свойства и атрибута:
+		var link = document.getElementById("link");
+		console.log("Свойство: " + link.href + " атрибут:" + link.getAttribute("href"));
+		// Это происходит потому, что атрибут может быть любым, а свойство href , в соответствии со
+		// спецификацией должно быть полной ссылкой
+
+		//для нестандартных атрибутов свойства не создаются!
+		console.log( elem.getAttribute("about") ); // "tag info", атрибут получен 
+		elem.setAttribute("test", 123); // атрибут Test установлен
+		console.log( elem.outerHTML ); // в HTML видны все атрибуты!
+		
+		var attrs = elem.attributes; // можно получить коллекцию атрибутов
+		for (var i = 0; i < attrs.length; i++) 
+			console.log( attrs[i].name + " = " + attrs[i].value );
+		
+	</script>
+</body>
+</html>

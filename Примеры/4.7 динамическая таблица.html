@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+
+
+<style>
+
+input {
+	margin-top: 10px;
+}
+
+form, div {
+	margin-top: 20px;
+}
+	
+table{
+	border-spacing: 0px;
+}
+
+</style>
+
+<script>
+
+/*
+Создайте таблицу с помощью модификации DOM, предусмотрев изменения её размеров и обновления значения цвета ячеек.
+
+Размер 5x5:
+12345
+ 1234
+  123
+   12
+    1
+
+*/
+
+function isNumeric(n)
+{
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function createTable(size)
+{
+	var rez = document.getElementById("result");
+	
+	document.getElementById("update").hidden = true;
+
+	if (!isNumeric(size))
+	{
+		rez.innerHTML = "<b>Ошибка!</b> Проверьте введёное значение<br>";
+		return;
+	}
+
+	size = parseFloat(size);
+
+	if (size < 1 || size > 50)
+	{
+		rez.innerHTML = "<b>Ошибка!</b> C такими размерами нельзя построить фигуру<br>";
+		return;
+	}
+	
+	rez.innerHTML = "";
+	document.getElementById("update").hidden = false;
+
+	// создаём элементы table и tbody (по стандарту ячейки таблицы должны быть в теге tbody)
+	var table = document.createElement("table");
+	var tbody = document.createElement("tbody");
+	table.appendChild(tbody);
+	
+	var x, y;
+	var isRed; //заполняется ли ячейка числом
+	for (y = 0; y < size; y++)
+	{
+		// создаём строку таблицы
+		let row = document.createElement("tr");
+		
+		for (x = 0; x < size; x++)
+		{
+			isRed = (x + 1) > y;
+			
+			// создаём ячейку с нужными аттрибутами
+			let cell = document.createElement("td");
+			let cellText = document.createTextNode(isRed ? x + 1 - y : "");
+			cell.width = "25px";
+			cell.align = "center";
+			cell.bgColor = isRed ? "red" : "transparent";
+			
+			cell.appendChild(cellText);
+			row.appendChild(cell);
+		}
+		tbody.appendChild(row);
+	}
+	rez.appendChild(table);
+}
+
+
+function updateTable(color)
+{
+	// находим все ячейки в блоке результатов
+	var cells = document.getElementById("result").getElementsByTagName("td");
+	
+	for (var i = 0; i < cells.length; ++i) 
+		if(cells[i].bgColor != "transparent")
+			cells[i].bgColor = color;
+}
+
+
+function init()
+{
+	
+	var rez = document.createElement("div");
+	rez.id = "result";
+	document.body.appendChild(rez);
+	
+	document.getElementById("update").hidden = true;
+}
+
+</script>
+</head>
+<body onload = "init()" >
+	<form>
+	Введите размер фигуры (не более 50х50):<br>
+	<input type="text" id="size"><br>
+	<input type="button" id="button" value="Построить" 
+					onclick="createTable(form.size.value)">
+	</form>
+	<form id = "update">
+	Цвет:<br>
+	<input type="radio" name="color" value="red" checked>Красный<br>
+	<input type="radio" name="color" value="green">Зеленый<br>
+	<input type="radio" name="color" value="blue">Синий<br>
+	<input type="button" id="button" value="Обновить" 
+					onclick="updateTable(form.color.value)">
+	</form>
+</body>
+</html>

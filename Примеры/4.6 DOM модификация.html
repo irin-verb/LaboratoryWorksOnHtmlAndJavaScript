@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<style>
+	.message 
+	{
+		margin: 15px;
+		padding: 15px;
+		border: 1px solid #d6e9c6;
+		border-radius: 4px;
+		color: #3c763d;
+		background-color: #dff0d8;
+	}
+</style>
+<body>
+	<h3>Моя страница</h3>
+	<form>
+		<input type="button" id="button" value="Добавить сообщение" 
+						onclick="pushMessage()">
+	</form>
+	<script>
+		// создаём сообщение и добавляем его в разметку в начало
+		var div = document.createElement('div');
+		div.className = "message";
+		div.innerHTML = "<b>Ура!</b> Вы прочитали это важное сообщение.";
+		document.body.insertBefore(div, document.body.firstChild);
+		
+		// клонируем макет сообщения и добавляем его в разметку в конец
+		var newDiv = div.cloneNode(true);
+		newDiv.querySelector('b').innerHTML = 'Второе сообщение!';
+		document.body.appendChild(newDiv);
+		
+		// удаляем сообщение через 4 секунды 
+		var timeout = 4000;
+		setTimeout(function() {
+			div.parentNode.removeChild(div);
+			
+			// удаляем второе сообщение также через 4 секунды после
+			// удаления первого
+			setTimeout(function() {
+				newDiv.parentNode.removeChild(newDiv);
+			}, timeout);
+		}, timeout);
+		
+		
+		// функция для добавления сообщений
+		function pushMessage()
+		{
+			var div = document.createElement('div');
+			div.className = "message";
+			document.body.appendChild(div);
+			var text = prompt("Введите текст для сообщения", "Жили были <html> и <body>...");
+			
+			// Если текст для сообщения нужно показать именно как текст, а не как HTML, 
+			// то можно обернуть его в текстовый узел.
+			// createTextNode - вставится именно как текст, без HTML-обработки!
+			div.appendChild(document.createTextNode(text));
+			
+			
+			setTimeout(function() {
+				div.parentNode.removeChild(div);
+			}, timeout);
+		}
+		
+	</script>
+</body>
+</html>

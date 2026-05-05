@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	
+	// Любая функция позволяет использовать в своём теле this, 
+	// каким будет это значение – выяснится в момент запуска.
+	function showName() 
+	{
+		console.log(this.firstName + " " + this.lastName);
+	}
+	
+	var user = 
+	{
+		firstName: "Василий",
+		lastName: "Васильев",
+		patronym: "Васильевич"
+	};
+
+	// функция вызовется с this = user
+	showName.call(user) // "Василий Васильев"
+	
+	//После контекста в call можно передать аргументы для функции.
+	function showFullName(first, last) 
+	{
+		console.log(this[first] + " " + this[last]);
+	}
+	showFullName.call(user, "firstName", "lastName"); // "Василий Васильев"
+	showFullName.call(user, "firstName", "patronym"); // "Василий Васильевич"
+	
+	// При помощи call можно легко взять метод одного объекта, в том числе встроенного, 
+	// и вызвать в контексте другого.
+	// Это называется "одалживание" метода (method borrowing).
+	function printArgs()
+	{
+		console.log([].join.call(arguments, "|"));
+		// arguments это псевдомассив, поэтому в нем нет стандартных методов Array
+		// но их легко можно "одолжить" используя метод call
+	}
+	printArgs(1, "два", [3,4], "пять");
+	
+	// также есть довольно простой способ через call сделать из псевдомассива
+	// обычный массив
+	function printArgs2() 
+	{
+		// вызов array.slice() скопирует все элементы из arguments в новый массив
+		var args = [].slice.call(arguments);
+		console.log( args.join('|')); // args теперь полноценный массив из аргументов
+	}
+	printArgs2("один", 2, {three : 3});
+
+	// -------------------------------------------------------
+	// Если  неизвестно, с каким количеством аргументов понадобится вызвать функцию, 
+	// можно использовать более мощный метод apply().	
+	// Вызов функции при помощи apply() работает аналогично call(), но принимает 
+	// массив аргументов вместо списка.
+	showFullName.apply(user, ["firstName", "lastName"]); // "Василий Васильев"
+	showFullName.apply(user, ["firstName", "patronym"]); // "Василий Васильевич"
+	
+	// При помощи apply можно например найти максимальный элемент в массиве:
+	var arr = [2, 5, 8, 1, 7, 6, 0, 9, 1, 2];
+	console.log(Math.max.apply(null, arr)); // 9 
+	// контекст this = null т.к. контекст для max не важен
+	
+	// с помощью apply() можно создавать функции высшего порядка:
+	
+	// функция высшего порядка not(f) принимает в качестве аргумента логическую функцию f
+	// и возвращает функцию, обратную ей
+	
+	function not(f)
+	{
+		return function() // возвращает новую функцию
+		{
+			var result = f.apply(this, arguments); // вызов f
+			return !result; // инвертируем результат
+		}
+	}
+	
+	var even = x => x % 2 == 0; // even - проверить четное ли число
+	var odd = not(even); // odd - создаём функцию как обратную к even
+ 	
+	console.log(even(5));
+	console.log(odd(5));
+	
+	
+	// В следующем примере демонстрируется функция memoize() высшего порядка, которая принимает любую функцию 
+	// в виде аргумента и возвращает ее мемоизированную версию:
+	function memoize(f)
+	{
+		var cache = {}; // кэш значений 
+		
+		return function()
+		{
+			var key = arguments.length + ":" + [].join.call(arguments,",");
+			
+			if(key in cache)
+			{
+				console.log("кэш! -> " + key); // отладка
+				return cache[key];
+			}
+			else
+			{
+				console.log("расчёт! -> " + key); // отладка
+				return cache[key] = f.apply(this, arguments);
+			}
+			
+		};
+	}
+	
+	// метод половинного деления
+	function halfDiv(f, a, b, eps)
+	{
+		var c;
+		while (b - a > eps)
+		{
+			c = (a + b) * 0.5;
+			if(f(b) * f(c) < 0)
+				a = c;
+			else
+				b = c;
+		}
+		return (a + b) * 0.5;
+	}
+	// memHalfDiv мемоизированная версия функции halfDiv
+	var memHalfDiv = memoize(halfDiv); 
+	console.log(memHalfDiv(x => 4 - Math.exp(x) - 2 * x * x, 0.0, 2.0, 1e-10));
+	console.log(memHalfDiv(x => 4 - Math.exp(x) - 2 * x * x, 0.0, 2.0, 1e-10));
+
+	
+	
+	// функция возвращает вариант функции с замером времени выполнения
+	function timing(f)
+	{
+		return function()
+		{
+			var start = (new Date()).getTime();
+			var result = f.apply(this, arguments);
+			var end = (new Date()).getTime();
+			console.log("Время выполнения (мсек): " + (end - start));
+			return result;
+		};
+	}
+	
+	// функция Фибоначчи
+	function fibo(n)
+	{	
+		return n <= 0 ? 0 : (n == 1? 1 : fibo(n - 1) + fibo(n - 2));
+	}
+	// memTimeFibo - мемоизированная версия функции fibo с расчётом времени выполнения
+	var memTimeFibo = timing(memoize(fibo)); 
+	console.log(memTimeFibo(40));
+	console.log(memTimeFibo(40));
+	
+
+	
+
+</script>
+</head>
+<body>
+</body>
+</html>
+

@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+	
+	var arr = [1, , 3, , 5]; // разреженный массив
+	
+	for(let i = 0; i < arr.length; ++i)
+		if(arr[i] !== undefined) // пропускаем отсуствующие элементы
+			console.log("arr[" + i + "] = " + arr[i]);
+	/*
+		arr[0] = 1
+		arr[2] = 3
+		arr[4] = 5	
+	*/
+	
+	
+	// for-in позволяет пропускать отсутсвующие элементы в массиве
+	for(let i in arr)
+		console.log("arr[" + i + "] = " + arr[i]);
+	/*
+		arr[0] = 1
+		arr[2] = 3
+		arr[4] = 5	
+	*/
+	
+	
+	// однако если мы добавили новые свойства в объект прототипа массива
+	// то их нужно будет отфильтровывать через hasOwnProperty
+	Array.prototype.newProp = "Hello";
+
+	for(let i in arr)
+	{
+		//if(!arr.hasOwnProperty(i)) continue;
+		console.log("arr[" + i + "] = " + arr[i]);
+	}
+	/*
+		arr[0] = 1
+		arr[2] = 3
+		arr[4] = 5
+		arr[newProp] = Hello
+	*/
+	
+	//---------------------------------------------------------------------
+	
+	var table = new Array(10); // в таблице 10 строк
+	
+	for(let col = 0; col < table.length; ++col)
+		table[col] = new Array(10); // в каждой строке 10 столбцов
+		
+	// заполняем значениями
+	
+	for(let row = 0; row < table.length; ++row)
+		for(let col = 0; col < table[row].length; ++col)
+			table[row][col] = row * col;
+	
+	// изменение элементов двумерного массива
+	table[5][5] = "none";
+			
+	console.log(table);
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

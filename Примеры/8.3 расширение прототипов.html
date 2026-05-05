@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	
+	// объекты прототипы есть и у стандартных объектов. Их также можно изменять
+	// например можно добавить метод перемешивания элементов во все массивы:
+	
+	Array.prototype.shuffle = function()
+	{
+		var cur = this.length;
+
+		while (cur != 0) 
+		{
+			var rnd = Math.floor(Math.random() * cur--);
+			// деструктурирующее присваивание
+			// для обмена значений местами (ES6)
+			[this[cur],this[rnd]] = [this[rnd],this[cur]];
+		}
+		return this;
+	}
+	
+	// и метод, возвращающий массив элементов,
+	// значения которых попадают в [a...b]
+	Array.prototype.filterInRange = function(a,b)
+	{
+		return this.filter(x => x >= a && x <= b);
+	}
+	
+	console.log(arr.shuffle().filterInRange(2,5)); // [3, 5, 4, 2]
+	// как легко убедится, метод shuffle появился в массиве
+	// уже после объявления массива
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

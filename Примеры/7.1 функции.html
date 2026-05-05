@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	// Объявления функций в JavaScript поднимаются наверх локальной или глобальной области видимости.
+	// Например, в одном блоке script функцию можно вызывать в любом месте, даже до её определения
+	console.log(distance(10.0, 24.5, 11.23, 34.2));
+
+	function distance(x1, x2, y1, y2)
+	{
+		var dx = x2 - x1;
+		var dy = y2 - y1;
+		
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	// функция выводит все свойства объекта и их значения
+	function printProps(o)
+	{
+		for(let p in o)
+			console.log(p + " -> " + o[p]);
+	}
+	
+	var user = {name : "Василий Петрович", age : 56, address : "Рязань, пл Ленина, д. 4, кв. 13"};
+	console.log(printProps(user)); // функция не имеет return, поэтому возвращает undefined
+	
+	// по сути любое объявление функции эквивалентно присвоению значения переменной
+	// в виде объекта функции
+	var square = function (x) 
+				{ 
+					return x * x; 
+				};
+	
+	// выражения определения функций могут иметь имена, что позволяет осуществлять 
+	// рекурсивные вызовы
+	var fact = function fact(x) 
+				{ 
+					return x <= 1 ? 1 : x * fact( --x ); 
+				};
+	
+	// определения функций могут использоваться в качестве значения аргументов
+	var a = [11, 169, 44, 22, 81, 63, 25, 93];
+	a.sort(function(a,b) 
+			{ 
+				return a - b; 
+			});
+	console.log(a);
+	
+	
+	// выражения определения функций могут быть сразу выполнены:
+	var tenSqr = (function (x) { return x * x; }(10));
+	console.log(tenSqr);
+	
+	// -------------------------------------------------
+	
+	// если присвоить объект функции как значение свойству объекта,
+	// то она станет его методом, и получает неявно контекст вызова (this) 
+	// ссылающийся на сам объект
+	user.getBirthYear = function() 
+						{
+							return (new Date()).getFullYear() - this.age;
+						};
+	// после этого можно вызывать метод getBirthYear как метод объекта user
+	console.log(user.name + " родился в " + user.getBirthYear() + " году.");
+	
+	// в какой-то момент можно удалить метод из объекта
+	delete user.getBirthYear;
+	// тогда уже нельзя будет обратиться к нему
+	console.log(user.getBirthYear); // undefined!
+	
+	// -------------------------------------------------
+	
+	// если метод ничего не возвращает часто удобно добавить возврат самого объекта (this)
+	// тогда можно будет создавать цепочки вызовов методов
+	user.calcBirthYear = function() 
+						{
+							this.birthYear = (new Date()).getFullYear() - this.age;
+							return this;
+						};
+	user.calcRetireYear = function() 
+						{
+							this.retireYear = 65 - this.age + (new Date()).getFullYear();
+							return this;
+						};
+						
+	user.printAbout = function() 
+						{
+							console.log(this.name +
+										(this.birthYear !== undefined ? " родился в " + this.birthYear + " году," : "") +
+										(this.retireYear !== undefined ? " выходит на пенсию в " + this.retireYear + " году," : "") +
+										(this.address !== undefined ? " проживает по адресу: " + this.address : "")
+							);
+						};
+						
+	// можно таким образом составлять цепочки или каскады вызовов методов				
+	user.calcBirthYear().calcRetireYear().printAbout();
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

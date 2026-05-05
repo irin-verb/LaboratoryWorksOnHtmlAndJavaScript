@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+  <!-- Комментарий 1 -->
+  <div id = "begin">Начало</div>
+  <ul id = "ulElem">
+	 <li>Первый пункт</li>
+	 <li>Второй пункт</li>
+	 <li>Третий пункт</li>
+	 <li>Четвертый пункт</li>
+  </ul>
+  <div class="article">Статья</div>
+  <div class="long article">Длинная статья</div>
+  <div>Конец</div>
+  
+  <!-- Комментарий 2 -->
+  
+  <script>
+	
+	// найти элемент по его уникальному id
+	var elem = document.getElementById("begin");
+	elem.style.background = "red";
+	
+	// найти все элементы конкретного тега в заданном элементе
+	var ulElem = document.getElementById("ulElem");
+	var liElems = ulElem.getElementsByTagName("li");
+	for (var i = 0; i < liElems.length; i++) 
+	{
+		var input = liElems[i];
+		console.log(input.innerText);
+		input.textContent= (i + 1) + ") " + input.innerText;
+	}
+	
+	
+	// найти все элементы по заданному классу
+	var articles = document.getElementsByClassName("article");
+	console.log("Найдено блоков статей: " + articles.length ); // 2, найдёт оба элемента
+	
+	// поиск элемента по css - селектору
+	var li = document.querySelector("ul > li");
+	li.style.background = "grey";
+  </script>
+  ...
+</body>
+</html>

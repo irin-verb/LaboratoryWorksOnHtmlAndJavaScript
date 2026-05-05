@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+
+<!-- Вставка кода из файла -->
+<script src="1.3.myscript.js"></script>
+
+<!-- console.log(...) - выводит сообщение в отладочную консоль -->
+<script>
+	console.log("Text:",1,2,3);
+	
+	// также есть специальные методы для вывода в консоль:
+	console.info("Информационное сообщение");
+	console.error("Сообщение об ошибке");
+	console.debug("Отладочное сообщение");
+</script>
+
+<head>
+<body> 
+
+	<!-- Вставка кода внутри контейнера script для генерации HTML-разметки на стороне браузра -->
+	<script>
+		var d = new Date();
+		document.write('Момент загрузки страницы: ' +
+						d.getHours() + ":" +
+						d.getMinutes() + ":" +
+						d.getSeconds() + "<br>");
+						
+		document.write('Цитата: ' + getQuote() + "<br>");
+	</script>
+
+	<!--
+		Оператор document.write(строка) записывает указанную строку в текущий HTML-document
+	-->
+	
+</body>
+</html>

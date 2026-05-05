@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var sum = new Function('a', 'b', 'return a + b');
+	console.log(sum(2, 6)); // 8
+
+	function calc(funcBody)
+	{
+		// проверка регулярным выражением на соотвествие строки арифметическому выражению
+		var regex = /(?:(?:^|[-+_*/])(?:\s*-?\d+(\.\d+)?(?:[eE][+-]?\d+)?\s*))+$/;
+		if(!regex.test(funcBody))
+		{
+			document.getElementById("result").textContent = "ошибка в выражении";
+			return;
+		}
+
+		var f = new Function("return " + funcBody);
+		console.log(f());
+		document.getElementById("result").textContent = f();
+	}
+	
+	function init()
+	{
+		
+		var rez = document.createElement("div");
+		rez.id = "result";
+		document.body.appendChild(rez);
+	}
+
+</script>
+</head>
+<body onload = "init()">
+	<form>
+	Введите простое арифметическое выражение:<br>
+	<input type="text" id="func"><br>
+	<input type="button" id="button" value="Посчитать" 
+					onclick="calc(form.func.value)">
+	</form>
+</body>
+</html>
+

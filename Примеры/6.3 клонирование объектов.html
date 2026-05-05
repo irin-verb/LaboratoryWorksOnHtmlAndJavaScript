@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	var user = {
+		name: "Вася",
+		age: 25,
+		signup: {
+			login : "Vasya",
+			pass : "qwerty"
+		}
+	};
+	
+	var copy = {};
+	
+	for(var key in user)
+		copy[key] = user[key];
+		
+	copy.name = "Петя";
+	copy.age = 19;
+	copy.signup.login = "Petya";
+	
+	console.log(user,copy);
+	
+	
+	
+	// т.к. была создана поверхностная копия то
+	// приметивные свойства стали различны, а объектное
+	// свойство signup осталось одно и тоже
+	// {name: 'Вася', age: 25, signup: {login: 'Petya', pass: 'qwerty'}}
+	// {name: 'Петя', age: 19, signup: {login: 'Petya', pass: 'qwerty'}}
+	
+	
+	//-----------------------------------------------------
+	
+	var user2 = {
+		name: "Вася",
+		age: 25,
+		signup: {
+			login : "Vasya",
+			pass : "qwerty"
+		}
+	};
+	
+	// создадим глубокую копию:
+	var deepCopy = makeDeepCopy(user2);
+	
+	
+	function makeDeepCopy(obj)
+	{
+		var copy = {};
+		for(var key in obj)
+		{
+			// к сожалению случаи когда свойство является
+			// массивом, датой или др. стандартным объектом
+			// придётся рассматривать отдельно
+			if(typeof obj[key] != "object")
+				copy[key] = obj[key];
+			else
+				copy[key] = makeDeepCopy(obj[key]);
+		}
+		
+		return copy;
+	}
+	
+	deepCopy.name = "Петя";
+	deepCopy.age = 19;
+	deepCopy.signup.login = "Petya";
+	
+	console.log(user2,deepCopy);
+	// глубокая копия полностью независима от исходного объекта:
+	// {name: 'Вася', age: 25, signup: {login: 'Vasya', pass: 'qwerty'}}
+	// {name: 'Петя', age: 19, signup: {login: 'Petya', pass: 'qwerty'}}
+	
+	
+	//-----------------------------------------------------
+	
+	
+	// в новых версиях стандарта появилась стандартная функция structuredClone 
+	// для глубокого копирования объектов, с поддержкой всех стандартных типов
+	var deepCopy2 = structuredClone(user2);
+	deepCopy2.name = "Дима";
+	deepCopy2.age = 34;
+	deepCopy2.signup.login = "Dima";
+	console.log(user2,deepCopy2);
+	// {name: 'Вася', age: 25, signup: {login: 'Vasya', pass: 'qwerty'}}
+	// {name: 'Дима', age: 34, signup: {login: 'Dima', pass: 'qwerty'}}
+	
+</script>
+</head>
+<body>
+</body>
+</html>
+

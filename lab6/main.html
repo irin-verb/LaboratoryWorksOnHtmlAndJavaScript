@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<style>
+		input {
+			margin-top: 10px;
+		}
+		form, div {
+			margin-top: 20px;
+		}
+		
+		.message {
+			margin: 15px;
+			padding: 15px;
+			border: 1px solid #d6e9c6;
+			border-radius: 4px;
+			color: #3c763d;
+			background-color: #dff0d8;
+		}
+	</style>
+	<script src="script.js"charset="windows-1251"></script>
+</head>
+
+<body onload="init()">
+	<form>
+		Число деталей:
+		<input type="text" id="detail_number" value="4"> <br>
+		<input type="button" value="Сгенерировать" onclick="generateDetails(form.detail_number.value)">
+		<input type="button" value="Загрузить" onclick="loadDetails()">
+		<hr>
+	</form>
+	<form id="update">
+		<input type="button" value="Удалить материалы, если масса меньше чем" onclick="deleteMaterialsIfMassUnder(form.detail_mass.value)">
+		<input type="text" id="detail_mass" value="5">
+		<hr>
+		<input type="button" value="Найти детали с габаритными размерами" onclick="findDetailsWithDimensions(form.detail_dimension_x.value, form.detail_dimension_y.value, form.detail_dimension_z.value)">
+		<input type="text" id="detail_dimension_x" width="10" value="1">
+		<input type="text" id="detail_dimension_y" value="2">
+		<input type="text" id="detail_dimension_z" value="3">
+		<input type="button" value="Добавить к найденным деталям габаритный объем" onclick="calculateFoundedDetailsDimensionalValue()">
+		<hr>
+		<input type="button" value="Детали без сортировки" onclick="getDetails()">
+		<input type="button" value="Детали, отсортивованные по убыванию массы" onclick="getSortedByMassDetails()">
+		<input type="button" value="Сохранить" onclick="saveDetails()">
+		<hr>
+	</form>
+</body>
+</html>

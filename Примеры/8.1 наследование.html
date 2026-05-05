@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<script>
+
+	// скрытое свойство [[Prototype]] содержится в любом объекте
+	var obj = {a: 5, b : 6};
+	console.log(Object.getPrototypeOf(obj)) // доступ к нему можно осуществить через getPrototypeOf
+											// для obj прототипом является Object.prototype
+	var arr = [1, 2, 3];
+	console.log(Object.getPrototypeOf(arr)); // для arr прототипом является Array.prototype
+											 // Array.prototype.prototype === Object.prototype
+	
+	// с помощью Object.create() можно создавать объекты с заданым прототипом
+	var obj1 = {x : 1};
+	var obj2 = Object.create(obj1);
+	obj2.y = 2;
+	var obj3 = Object.create(obj2);
+	obj3.z = 3;
+	console.log(obj3, obj3.x, obj3.y, obj3.z); // {z: 3} 1 2 3
+	// таким образом obj3 имеет собственное свойство "z"
+	// свойство "y" унаследованно у obj2, а "x" у obj1
+	// obj2 является прототипом для obj3,
+	// obj1 является прототипом для obj2
+	// у obj1 прототип Object.prototype
+	
+	
+	obj1.w = 4; // при изменении объекта прототипа изменения коснутся всех
+				// объектов наследников
+	console.log(obj3, obj3.x, obj3.y, obj3.z, obj3.w); // {z: 3} 1 2 3 4
+	
+	// Важно: механизм наследования действует только при чтении
+	// при записи будет создано новое собственное свойство!
+	var unicircle = {r : 1}; 
+	var circle = Object.create(unicircle); // circle наследует свойство "r" у unicircle
+	circle.x = 1; 
+	circle.y = 2;
+	circle.r = 10; // переопределяем, а не заменяем значение унаследованного свойства
+	console.log(circle); // {x: 1, y: 2, r: 10} "r" теперь собственное свойство circle
+	console.log(unicircle); // {r: 1} unicircle не изменился!
+	
+	
+	// ------------------------------------
+	
+	// range фабричная функция, возвращающая объект range
+	function range(from, to)
+	{
+		// объект-прототип хранится в свойстве methods данной функции
+		// и определяет общие методы для объектов Range
+		var r = Object.create(range.methods);
+		
+		//сохраняем значения свойств
+		r.from = from;
+		r.to  = to;
+		
+		return r;
+	}
+	
+	// methods содержит объект-прототип, наследуемый всеми объектами класса Range
+	// Важно: после назначения объектом прототипом в его методах this будет указывать
+	// на конечный объект(!), а не объект-прототип. 
+	range.methods = 
+	{
+		includes: function(x)
+		{
+			return this.from <= x && x <= this.to; // this указывает на конечный объект!
+		},
+		
+		foreach: function(f, step)
+		{
+			for(let x = Math.ceil(this.from); x <= this.to + step * 0.5; x+=step) f(x);
+		},
+		
+		toString: function()
+		{
+			return "[" + this.from + "..." + this.to + "]";
+		}
+	};
+	
+	var r = range(1, 3);
+	console.log(r);
+	console.log(r.toString()); // [1...3]
+	console.log(r.includes(2)); // true
+	console.log(r.includes(7)); // false
+	r.foreach(x => console.log(x * x), 0.5); // 1 2.25 4 6.25 9
+
+	// в этом примере фабричная функция range() фактически создаёт классы range используя 
+	// объект прототип methods
+	
+	
+	// -----------------------------------------
+	// Важно: при попытке записи значения свойства в прототипе 
+	// через this будет создано новое собственное свойство:
+	
+	
+		var base = {
+			prop: 0,
+			
+			modify : function(x)
+			{
+				// здесь будет создано новое собственное 
+				// свойство в объектах-наследниках!
+				// т.к. наследование свойств не действует при записи
+				this.prop = x; 
+			}
+		}
+	
+		
+		// a -> base, b -> base, c --> b --> base
+		var a = Object.create(base);
+		var b = Object.create(base);
+		var c = Object.create(b);
+				
+		a.modify(44);
+		b.modify(66);
+		c.modify(88);
+
+		console.log(base); // {prop: 0, modify: function()}
+		console.log(a); // {prop: 44}[[Prototype]] --> {prop: 0, modify: function()}
+		console.log(b); // {prop: 66}[[Prototype]] --> {prop: 0, modify: function()}
+		console.log(c); // {prop: 88}[[Prototype]] --> {prop: 66}[[Prototype]] --> {prop: 0, modify: function()}
+</script>
+</head>
+<body>
+</body>
+</html>
+
